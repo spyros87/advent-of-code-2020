@@ -1,39 +1,45 @@
 package day01
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"os"
+	"sort"
+
+	"github.com/spyros87/advent-of-code-2020/pkg/input"
+)
 
 const TotalSum = 2020
 
-func ReportRepair(expenses []int) (int, error) {
-	first, second := check(expenses)
+var NoNumbersFound = errors.New("no expenses resulting 2020 exist")
 
-	if first == -1 && second == -1 {
-		return 0, errors.New("no expenses resulting 2020 exist")
-	}
+func ReportRepair() {
 
-	return expenses[first] * expenses[second], nil
+	sort.Ints(input.Day01())
+
+	partOne(input.Day01())
 }
 
-func check(expenses []int) (int, int) {
+func partOne(expenses []int) {
+	first, second, err := searchForTwoEntriesEqualTo(expenses, TotalSum)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 
-	var firstPosition = -1
-	var secondPosition = -1
+	fmt.Printf("[%d] + [%d] = %d\n", first, second, first+second)
+	fmt.Printf("[%d] * [%d] = %d\n", first, second, first*second)
+}
 
-	for i, firstValue := range expenses {
-		for j, secondValue := range expenses[(i + 1):] {
+func searchForTwoEntriesEqualTo(expenses []int, expectedSum int) (first int, second int, er error) {
+	for _, value := range expenses {
 
-			if sum2020(firstValue, secondValue) {
-				firstPosition = i
-				secondPosition = (i + 1) + j
+		rest := expectedSum - value
+		index := sort.SearchInts(expenses, rest)
 
-				return firstPosition, secondPosition
-			}
-
+		if index < len(expenses) && expenses[index] == rest {
+			return value, rest, nil
 		}
 	}
-	return -1, -1
-}
-
-func sum2020(firstValue int, secondValue int) bool {
-	return (firstValue + secondValue) == TotalSum
+	return 0, 0, NoNumbersFound
 }
