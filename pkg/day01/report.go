@@ -1,3 +1,4 @@
+// Package day01 contains all the necessary code in order to calculate the results for the first day.
 package day01
 
 import (
@@ -13,6 +14,8 @@ const TotalSum = 2020
 
 var NoNumbersFound = errors.New("no expenses resulting 2020 exist")
 
+// ReportRepair is the Day One's task title. It is the entry point for executing the relevant tasks of the day.
+// The method calls input.Day01 which provides the needed input.
 func ReportRepair() {
 	fmt.Println("Day One Starts")
 	sort.Ints(input.Day01())
