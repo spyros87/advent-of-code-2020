@@ -15,3 +15,6 @@
 # vendor/
 
 .idea
+
+# Ignore Generated files
+day*.go
